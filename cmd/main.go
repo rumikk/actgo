@@ -2,6 +2,7 @@ package main
 
 import (
 	"actgo/parser"
+	"actgo/storage"
 	"fmt"
 	bolt "go.etcd.io/bbolt"
 	"log"
@@ -19,7 +20,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	processParser, err := parser.NewProcessParser(processFile)
+	processes, err := parser.NewProcessParser(processFile)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -28,4 +29,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	s := storage.Storage{Db: db}
+	s.Init()
 }
