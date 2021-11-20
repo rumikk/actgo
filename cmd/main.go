@@ -4,9 +4,12 @@ import (
 	"actgo/parser"
 	"actgo/storage"
 	"fmt"
+	"github.com/PuerkitoBio/goquery"
 	bolt "go.etcd.io/bbolt"
 	"log"
+	"net/http"
 	"os"
+	"strings"
 )
 
 func main() {
@@ -32,4 +35,38 @@ func main() {
 
 	s := storage.Storage{Db: db}
 	s.Init()
+
+	for _, process := range processes {
+		page, err := GetPage(process.Url)
+		if err != nil {
+			log.Println(err)
+			continue
+		}
+
+		var entries []*storage.Entry
+		page.Find(strings.TrimSpace(process.Selector)).Each(func(i int, selection *goquery.Selection) {
+			extraction := selection.AttrOr("href", "")
+			if extraction != "" {
+				entries = append(entries, &storage.Entry{
+					Name:      process.Name,
+					Selected:  selection.Text(),
+					Extracted: extraction,
+				})
+			}
+		})
+
+	}
+}
+
+func GetPage(url string) (*goquery.Document, error) {
+	res, err := http.Get(url)
+	if err != nil {
+		return nil, err
+	}
+	defer res.Body.Close()
+	doc, err := goquery.NewDocumentFromReader(res.Body)
+	if err != nil {
+		return nil, err
+	}
+	return doc, nil
 }
