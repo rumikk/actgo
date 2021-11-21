@@ -29,6 +29,9 @@ func (s *Storage) Init() error {
 }
 
 func (s *Storage) AddEntry(entry *Entry) error {
+	if s.FindEntry(entry.Extracted).Extracted != "" {
+		return nil
+	}
 	return s.Db.Update(func(tx *bolt.Tx) error {
 		entry.CreatedAt = time.Now().Unix()
 		b := tx.Bucket([]byte("entries"))
