@@ -57,7 +57,7 @@ func main() {
 						s.AddEntry(entry)
 						for _, action := range process.Actions {
 							newAction := actions.NewAction(action.Name)
-							newAction.Perform(extracted)
+							extracted = newAction.Perform(extracted, action.Options)
 						}
 					}
 				}

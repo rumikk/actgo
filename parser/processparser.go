@@ -17,7 +17,8 @@ type Process struct {
 }
 
 type Action struct {
-	Name string `yaml:"name"`
+	Name    string `yaml:"name"`
+	Options string `yaml:"options"`
 }
 
 func NewProcessParser(processFile []byte) ([]*Process, error) {
