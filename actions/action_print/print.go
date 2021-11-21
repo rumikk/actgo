@@ -6,5 +6,5 @@ type Action struct{}
 
 func (a *Action) Perform(extracted string) string {
 	fmt.Println(extracted)
-	return ""
+	return extracted
 }
