@@ -1,7 +1,7 @@
 package actions
 
 import (
-	"actgo/actions/action_print"
+	"actgo/actions/action_log"
 	"actgo/actions/action_replace"
 )
 
@@ -10,7 +10,7 @@ type Action interface {
 }
 
 var actions = map[string]func() Action{
-	"print":   func() Action { return &action_print.Action{} },
+	"log":     func() Action { return &action_log.Action{} },
 	"replace": func() Action { return &action_replace.Action{} },
 }
 

@@ -1,13 +1,13 @@
-package action_print
+package action_log
 
 import (
-	"fmt"
+	"log"
 )
 
 type Action struct{}
 
 func (a *Action) Perform(input string, options string) string {
 	output := options + input
-	fmt.Println(output)
+	log.Println(output)
 	return output
 }
