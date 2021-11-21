@@ -14,8 +14,8 @@ type Storage struct {
 type Entry struct {
 	CreatedAt int64  `yaml:"created_at"`
 	Name      string `yaml:"name"`
-	Selected  string `yaml:"selected"`
-	Extracted string `yaml:"extracted"`
+	Input     string `yaml:"input"`
+	Output    string `yaml:"output"`
 }
 
 func (s *Storage) Init() error {
@@ -29,7 +29,7 @@ func (s *Storage) Init() error {
 }
 
 func (s *Storage) AddEntry(entry *Entry) error {
-	if s.FindEntry(entry.Extracted).Extracted != "" {
+	if s.FindEntry(entry.Input).Input != "" {
 		return nil
 	}
 	return s.Db.Update(func(tx *bolt.Tx) error {
@@ -47,7 +47,7 @@ func (s *Storage) AddEntry(entry *Entry) error {
 	})
 }
 
-func (s *Storage) FindEntry(extracted string) *Entry {
+func (s *Storage) FindEntry(input string) *Entry {
 	var result Entry
 	s.Db.View(func(tx *bolt.Tx) error {
 		b := tx.Bucket([]byte("entries"))
@@ -60,7 +60,7 @@ func (s *Storage) FindEntry(extracted string) *Entry {
 			if err != nil {
 				return err
 			}
-			if entry.Extracted == extracted {
+			if entry.Input == input {
 				result = entry
 				return nil
 			}
