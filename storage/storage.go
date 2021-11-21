@@ -29,7 +29,7 @@ func (s *Storage) Init() error {
 }
 
 func (s *Storage) AddEntry(entry *Entry) error {
-	if s.FindEntry(entry.Name, entry.Extracted).Extracted != "" {
+	if s.FindEntry(entry.Extracted).Extracted != "" {
 		return nil
 	}
 	return s.Db.Update(func(tx *bolt.Tx) error {
@@ -47,16 +47,21 @@ func (s *Storage) AddEntry(entry *Entry) error {
 	})
 }
 
-func (s *Storage) FindEntry(name string, extracted string) *Entry {
-	var entry Entry
+func (s *Storage) FindEntry(extracted string) *Entry {
+	var result Entry
 	s.Db.View(func(tx *bolt.Tx) error {
 		b := tx.Bucket([]byte("entries"))
 		b.ForEach(func(k, v []byte) error {
+			if result.CreatedAt != 0 {
+				return nil
+			}
+			var entry Entry
 			err := yaml.Unmarshal(v, &entry)
 			if err != nil {
 				return err
 			}
-			if entry.Name == name && entry.Extracted == extracted {
+			if entry.Extracted == extracted {
+				result = entry
 				return nil
 			}
 			entry = Entry{}
@@ -64,7 +69,7 @@ func (s *Storage) FindEntry(name string, extracted string) *Entry {
 		})
 		return nil
 	})
-	return &entry
+	return &result
 }
 
 func itob(v uint64) []byte {
