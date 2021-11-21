@@ -42,19 +42,19 @@ func main() {
 			log.Println(err)
 			continue
 		}
-
-		var entries []*storage.Entry
 		page.Find(strings.TrimSpace(process.Selector)).Each(func(i int, selection *goquery.Selection) {
-			extraction := selection.AttrOr("href", "")
-			if extraction != "" {
-				entries = append(entries, &storage.Entry{
-					Name:      process.Name,
-					Selected:  selection.Text(),
-					Extracted: extraction,
-				})
+			selected := selection.Text()
+			if selected != "" {
+				extracted := selection.AttrOr("href", "")
+				if extracted != "" {
+					s.AddEntry(&storage.Entry{
+						Name:      process.Name,
+						Selected:  selected,
+						Extracted: extracted,
+					})
+				}
 			}
 		})
-
 	}
 }
 
