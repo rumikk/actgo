@@ -44,23 +44,20 @@ func main() {
 			continue
 		}
 		page.Find(strings.TrimSpace(process.Selector)).Each(func(i int, selection *goquery.Selection) {
-			selected := selection.Text()
-			if selected != "" {
-				input := selection.AttrOr("href", "")
-				if input != "" {
-					if s.FindEntry(input).Input == "" {
-						var output string
-						output = input
-						for _, action := range process.Actions {
-							newAction := actions.NewAction(action.Name)
-							output = newAction.Perform(output, action.Options)
-						}
-						s.AddEntry(&storage.Entry{
-							Name:   process.Name,
-							Input:  input,
-							Output: output,
-						})
+			input := selection.AttrOr("href", "")
+			if input != "" {
+				if s.FindEntry(input).Input == "" {
+					var output string
+					output = input
+					for _, action := range process.Actions {
+						newAction := actions.NewAction(action.Name)
+						output = newAction.Perform(output, action.Options)
 					}
+					s.AddEntry(&storage.Entry{
+						Name:   process.Name,
+						Input:  input,
+						Output: output,
+					})
 				}
 			}
 		})
