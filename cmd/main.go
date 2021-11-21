@@ -1,6 +1,7 @@
 package main
 
 import (
+	"actgo/actions"
 	"actgo/parser"
 	"actgo/storage"
 	"fmt"
@@ -47,11 +48,18 @@ func main() {
 			if selected != "" {
 				extracted := selection.AttrOr("href", "")
 				if extracted != "" {
-					s.AddEntry(&storage.Entry{
+					entry := &storage.Entry{
 						Name:      process.Name,
 						Selected:  selected,
 						Extracted: extracted,
-					})
+					}
+					if s.FindEntry(entry.Extracted).Extracted == "" {
+						s.AddEntry(entry)
+						for _, action := range process.Actions {
+							newAction := actions.NewAction(action.Name)
+							newAction.Perform(extracted)
+						}
+					}
 				}
 			}
 		})
