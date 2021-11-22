@@ -3,7 +3,6 @@ package action_transmission
 import (
 	"log"
 	"net/http"
-	"net/url"
 	"strings"
 )
 
@@ -11,37 +10,33 @@ type Action struct{}
 
 func (a *Action) Perform(input string, options string) string {
 	client := &http.Client{}
-
-	getSessionForm := url.Values{"method": {"session-get"}}
-
-	addForm := url.Values{
-		"method":    {"torrent-add"},
-		"arguments": {"filename", input},
-	}
-
-	req, err := http.NewRequest("POST", "http://localhost:9091/transmission/rpc", strings.NewReader(getSessionForm.Encode()))
+	request, err := http.NewRequest("POST", "http://localhost:9091/transmission/rpc", strings.NewReader("{\"method\": {\"session-get\"}"))
 	if err != nil {
 		log.Fatal(err)
 	}
-	resp, err := client.Do(req)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer resp.Body.Close()
-	sessionId := resp.Header.Get("X-Transmission-Session-Id")
 
-	req, err = http.NewRequest("POST", "http://localhost:9091/transmission/rpc", strings.NewReader(addForm.Encode()))
+	response, err := client.Do(request)
 	if err != nil {
 		log.Fatal(err)
 	}
-	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-	req.Header.Set("X-Transmission-Session-Id", sessionId)
+	defer response.Body.Close()
 
-	res, err := client.Do(req)
+	sessionId := response.Header.Get("X-Transmission-Session-Id")
+	addTorrentRequest := "{\"method\":\"torrent-add\",\"arguments\":{\"filename\":\"" + input + "\"}}"
+
+	request, err = http.NewRequest("POST", "http://localhost:9091/transmission/rpc", strings.NewReader(addTorrentRequest))
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer res.Body.Close()
+
+	request.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	request.Header.Set("X-Transmission-Session-Id", sessionId)
+
+	response, err = client.Do(request)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer response.Body.Close()
 
 	return input
 }
