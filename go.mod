@@ -3,6 +3,7 @@ module actgo
 go 1.17
 
 require (
+	github.com/0xAX/notificator v0.0.0-20210731104411-c42e3d4a43ee
 	github.com/PuerkitoBio/goquery v1.8.0
 	go.etcd.io/bbolt v1.3.6
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b
