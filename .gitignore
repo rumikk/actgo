@@ -26,3 +26,5 @@ pnpm-debug.log*
 images/
 *.db
 *.yaml
+test.db
+test.yaml
