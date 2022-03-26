@@ -1,4 +1,4 @@
-module actgo
+module github.com/rumikk/actgo
 
 go 1.17
 

@@ -1,12 +1,12 @@
 package actions
 
 import (
-	"actgo/actions/action_log"
-	"actgo/actions/action_notification"
-	"actgo/actions/action_prefix"
-	"actgo/actions/action_replace"
-	"actgo/actions/action_suffix"
-	"actgo/actions/action_transmission"
+	"github.com/rumikk/actgo/actions/action_log"
+	"github.com/rumikk/actgo/actions/action_notification"
+	"github.com/rumikk/actgo/actions/action_prefix"
+	"github.com/rumikk/actgo/actions/action_replace"
+	"github.com/rumikk/actgo/actions/action_suffix"
+	"github.com/rumikk/actgo/actions/action_transmission"
 )
 
 type Action interface {

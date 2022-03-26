@@ -1,11 +1,11 @@
 package main
 
 import (
-	"actgo/actions"
-	"actgo/parser"
-	"actgo/storage"
 	"fmt"
 	"github.com/PuerkitoBio/goquery"
+	"github.com/rumikk/actgo/actions"
+	"github.com/rumikk/actgo/parser"
+	"github.com/rumikk/actgo/storage"
 	bolt "go.etcd.io/bbolt"
 	"log"
 	"net/http"
