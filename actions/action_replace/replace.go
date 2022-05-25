@@ -1,17 +1,16 @@
 package action_replace
 
 import (
-	"log"
 	"strings"
 )
 
-type Action struct{}
+type Action struct {
+	Old string `yaml:"old"`
+	New string `yaml:"new"`
+}
 
-func (a *Action) Perform(input string, options string) string {
-	opt := strings.Split(options, "|")
-	if len(opt) < 2 {
-		log.Fatal("Error when processing input: " + input + " options: " + options)
-	}
-	output := strings.ReplaceAll(input, opt[0], opt[1])
+func (a *Action) Perform(input string, options any) string {
+	o := options.(*Action)
+	output := strings.ReplaceAll(input, o.Old, o.New)
 	return output
 }

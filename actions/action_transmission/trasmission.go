@@ -6,11 +6,14 @@ import (
 	"strings"
 )
 
-type Action struct{}
+type Action struct {
+	Api string `yaml:"api"`
+}
 
-func (a *Action) Perform(input string, options string) string {
+func (a *Action) Perform(output string, options any) string {
+	o := options.(*Action)
 	client := &http.Client{}
-	request, err := http.NewRequest("POST", options, strings.NewReader("{\"method\": {\"session-get\"}"))
+	request, err := http.NewRequest("POST", o.Api, strings.NewReader("{\"method\": {\"session-get\"}"))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -22,9 +25,9 @@ func (a *Action) Perform(input string, options string) string {
 	defer response.Body.Close()
 
 	sessionId := response.Header.Get("X-Transmission-Session-Id")
-	addTorrentRequest := "{\"method\":\"torrent-add\",\"arguments\":{\"filename\":\"" + input + "\"}}"
+	addTorrentRequest := "{\"method\":\"torrent-add\",\"arguments\":{\"filename\":\"" + output + "\"}}"
 
-	request, err = http.NewRequest("POST", options, strings.NewReader(addTorrentRequest))
+	request, err = http.NewRequest("POST", o.Api, strings.NewReader(addTorrentRequest))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -38,5 +41,5 @@ func (a *Action) Perform(input string, options string) string {
 	}
 	defer response.Body.Close()
 
-	return input
+	return output
 }

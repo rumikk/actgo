@@ -6,8 +6,7 @@ import (
 
 type Action struct{}
 
-func (a *Action) Perform(input string, options string) string {
-	output := options + input
-	log.Println(output)
-	return output
+func (a *Action) Perform(input string, options any) string {
+	log.Println(input)
+	return input
 }
