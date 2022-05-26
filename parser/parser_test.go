@@ -24,7 +24,7 @@ func TestParser(t *testing.T) {
 	t.Run("test parse", func(t *testing.T) {
 		var err error
 		if actions, err = Parse(testData); err != nil {
-			t.Error(t.Name(), err)
+			t.Fatal(t.Name(), err)
 		}
 	})
 	t.Run("test number of jobs", func(t *testing.T) {
