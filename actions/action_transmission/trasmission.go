@@ -13,13 +13,13 @@ type Action struct {
 func (a *Action) Perform(output string, options any) string {
 	o := options.(*Action)
 	client := &http.Client{}
-	request, err := http.NewRequest("POST", o.Api, strings.NewReader("{\"method\": {\"session-get\"}"))
+	request, err := http.NewRequest("POST", o.Api, strings.NewReader("{\"method\":\"session-get\"}"))
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	response, err := client.Do(request)
-	if err != nil {
+	if err != nil || response.StatusCode != 409 {
 		log.Fatal(err)
 	}
 	defer response.Body.Close()
