@@ -46,7 +46,7 @@ func (a *Action) Perform(output string, options any) string {
 	request.Header.Set("X-Transmission-Session-Id", sessionId)
 
 	response, err = client.Do(request)
-	if err != nil {
+	if err != nil || response.StatusCode != 200 {
 		log.Fatal(err)
 	}
 	defer response.Body.Close()
