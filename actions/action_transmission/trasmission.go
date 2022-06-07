@@ -7,7 +7,9 @@ import (
 )
 
 type Action struct {
-	Api string `yaml:"api"`
+	Api      string `yaml:"api"`
+	UserName string `yaml:"username"`
+	Password string `yaml:"password"`
 }
 
 func (a *Action) Perform(output string, options any) string {
@@ -16,6 +18,10 @@ func (a *Action) Perform(output string, options any) string {
 	request, err := http.NewRequest("POST", o.Api, strings.NewReader("{\"method\":\"session-get\"}"))
 	if err != nil {
 		log.Fatal(err)
+	}
+
+	if o.UserName != "" && o.Password != "" {
+		request.SetBasicAuth(o.UserName, o.Password)
 	}
 
 	response, err := client.Do(request)
@@ -30,6 +36,10 @@ func (a *Action) Perform(output string, options any) string {
 	request, err = http.NewRequest("POST", o.Api, strings.NewReader(addTorrentRequest))
 	if err != nil {
 		log.Fatal(err)
+	}
+
+	if o.UserName != "" && o.Password != "" {
+		request.SetBasicAuth(o.UserName, o.Password)
 	}
 
 	request.Header.Set("Content-Type", "application/x-www-form-urlencoded")
